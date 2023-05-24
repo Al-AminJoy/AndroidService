@@ -2,10 +2,17 @@ package com.suffixit.akt.androidservice
 
 import android.app.Service
 import android.content.Intent
+import android.os.Handler
 import android.os.IBinder
+import android.os.Looper
+import android.os.Message
 import android.util.Log
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
+
+public const val SERVICE_MESSAGE = "ServiceMessage"
 private const val TAG = "MyDownloadService"
+
 class MyDownloadService : Service() {
 
     override fun onBind(intent: Intent): IBinder? {
@@ -14,18 +21,48 @@ class MyDownloadService : Service() {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         val songName = intent.getStringExtra("SONG_NAME")
-        downloadSong(songName!!)
+        Log.d(TAG, "downloadSong: onStartCommand $songName $startId")
+
+        downloadSong(songName!!, startId)
         return START_REDELIVER_INTENT
     }
-    
-    private fun downloadSong(fileName:String) {
-        Log.d(TAG, "downloadSong: Stared $fileName")
-        try {
-            Thread.sleep(4000)
-        }catch (e:Exception){
 
+    private fun downloadSong(fileName: String, startId: Int) {
+        /*Log.d(TAG, "downloadSong: Stared $fileName")
+        Handler().post(object :Runnable{
+            override fun run() {
+                try {
+                    Thread.sleep(4000)
+                    val intent = Intent(SERVICE_MESSAGE)
+                    intent.putExtra("SONG_STATUS","$fileName Downloaded")
+                    LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
+                    stopSelf(startId)
+
+                    Log.d(TAG, "downloadSong: Ended")
+                }catch (e:Exception){
+
+                }
+
+            }
+
+        })*/
+        Log.d(TAG, "downloadSong: Stared $fileName")
+
+        val handler = Handler(Looper.getMainLooper())
+        val runnable = Runnable {
+            stopSelf(startId)
+
+            val intent = Intent(SERVICE_MESSAGE)
+            intent.putExtra("SONG_STATUS","$fileName Downloaded")
+            LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
+
+            Log.d(TAG, "downloadSong: Ended $startId")
         }
-        Log.d(TAG, "downloadSong: Ended")
+        handler.postDelayed(runnable, 4000L)
+
+
+
+
 
     }
 }
