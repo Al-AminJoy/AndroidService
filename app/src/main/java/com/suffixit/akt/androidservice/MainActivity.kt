@@ -18,6 +18,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var btnStartService:Button
     private lateinit var txtSongName:TextView
     private lateinit var stringBuilder: StringBuilder
+    private lateinit var messageBroadcast: MessageBroadcast
+    private lateinit var intentFilter: IntentFilter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,12 +34,19 @@ class MainActivity : AppCompatActivity() {
                 startService(intent)
             }
         }
+
+        messageBroadcast = MessageBroadcast()
+        intentFilter = IntentFilter(SERVICE_MESSAGE)
+        /*
+                intentFilter.also {
+                    registerReceiver(messageBroadcast,it)
+                }*/
     }
 
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, intent: Intent) {
             Log.d(TAG, "onReceive: ${intent.getStringExtra("SONG_STATUS")}")
-            stringBuilder.append(intent.getStringExtra("SONG_STATUS"))
+            stringBuilder.append(intent.getStringExtra("SONG_STATUS")).append("\n")
             txtSongName.text = stringBuilder.toString()
         }
     }
@@ -47,14 +56,14 @@ class MainActivity : AppCompatActivity() {
         txtSongName = findViewById(R.id.txtSongNames)
     }
 
-    fun songs():List<String>{
+    private fun songs():List<String>{
         return listOf("A Song","B Song","C Song","D Song")
     }
 
     override fun onStart() {
         super.onStart()
         stringBuilder = StringBuilder()
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,IntentFilter(SERVICE_MESSAGE))
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,intentFilter)
     }
 
     override fun onDestroy() {

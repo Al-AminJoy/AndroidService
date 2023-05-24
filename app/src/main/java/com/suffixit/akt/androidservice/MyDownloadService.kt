@@ -28,24 +28,6 @@ class MyDownloadService : Service() {
     }
 
     private fun downloadSong(fileName: String, startId: Int) {
-        /*Log.d(TAG, "downloadSong: Stared $fileName")
-        Handler().post(object :Runnable{
-            override fun run() {
-                try {
-                    Thread.sleep(4000)
-                    val intent = Intent(SERVICE_MESSAGE)
-                    intent.putExtra("SONG_STATUS","$fileName Downloaded")
-                    LocalBroadcastManager.getInstance(applicationContext).sendBroadcast(intent)
-                    stopSelf(startId)
-
-                    Log.d(TAG, "downloadSong: Ended")
-                }catch (e:Exception){
-
-                }
-
-            }
-
-        })*/
         Log.d(TAG, "downloadSong: Stared $fileName")
 
         val handler = Handler(Looper.getMainLooper())
