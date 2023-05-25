@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
             txtSongName.text = ""
             stringBuilder.clear()
             for (song in songs()){
-                val intent = Intent(this,MyDownloadService::class.java)
+                val intent = Intent(this,MyIntentService::class.java)
                 intent.putExtra("SONG_NAME",song)
                 startService(intent)
             }

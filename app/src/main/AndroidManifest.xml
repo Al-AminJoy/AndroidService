@@ -13,9 +13,12 @@
         android:theme="@style/Theme.AndroidService"
         tools:targetApi="31">
         <service
+            android:name=".MyIntentService"
+            android:exported="false" />
+        <service
             android:name=".MyDownloadService"
             android:enabled="true"
-            android:exported="false"></service>
+            android:exported="false" />
 
         <activity
             android:name=".MainActivity"
