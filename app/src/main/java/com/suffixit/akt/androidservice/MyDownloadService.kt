@@ -10,7 +10,7 @@ import android.util.Log
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 
 
-public const val SERVICE_MESSAGE = "ServiceMessage"
+const val SERVICE_MESSAGE = "ServiceMessage"
 private const val TAG = "MyDownloadService"
 
 class MyDownloadService : Service() {

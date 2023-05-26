@@ -19,6 +19,7 @@ private const val TAG = "MainActivity"
 class MainActivity : AppCompatActivity() {
 
     private lateinit var btnStartService:Button
+    private lateinit var btnPlay:Button
     private lateinit var txtSongName:TextView
     private lateinit var stringBuilder: StringBuilder
     private lateinit var messageBroadcast: MessageBroadcast
@@ -32,35 +33,53 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         initViews()
         btnStartService.setOnClickListener {
-          /*  txtSongName.text = ""
+            txtSongName.text = ""
             stringBuilder.clear()
             for (song in songs()){
                 val intent = Intent(this,MyIntentService::class.java)
                 intent.putExtra("SONG_NAME",song)
                 startService(intent)
-            }*/
+            }
 
-            Log.d(TAG, "onCreate: ${musicPlayerService.getValue()}")
         }
 
         messageBroadcast = MessageBroadcast()
-        intentFilter = IntentFilter(SERVICE_MESSAGE)
+        intentFilter = IntentFilter(MUSIC_COMPLETE_SERVICE)
         /*
                 intentFilter.also {
                     registerReceiver(messageBroadcast,it)
                 }*/
+
+        btnPlay.setOnClickListener {
+            if (mBound){
+                if (musicPlayerService.isPlaying()){
+                    btnPlay.text = "Play"
+                    musicPlayerService.pause()
+                }else{
+                    btnPlay.text = "Pause"
+                    musicPlayerService.play()
+                }
+            }
+        }
     }
+
+
 
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(p0: Context?, intent: Intent) {
-            Log.d(TAG, "onReceive: ${intent.getStringExtra("SONG_STATUS")}")
-            stringBuilder.append(intent.getStringExtra("SONG_STATUS")).append("\n")
-            txtSongName.text = stringBuilder.toString()
+            Log.d(TAG, "onReceive: ${intent.getStringExtra("DONE")}")
+            /*stringBuilder.append(intent.getStringExtra("SONG_STATUS")).append("\n")
+            txtSongName.text = stringBuilder.toString()*/
+
+            if (intent.getStringExtra("DONE").equals("done",ignoreCase = true)){
+                btnPlay.text = "Play"
+            }
         }
     }
 
     private fun initViews() {
         btnStartService = findViewById(R.id.btnRun)
+        btnPlay = findViewById(R.id.btnPlay)
         txtSongName = findViewById(R.id.txtSongNames)
     }
 
@@ -85,12 +104,13 @@ class MainActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         /*stringBuilder = StringBuilder()
-        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,intentFilter)
+
         */
 
         val intent = Intent(this,MusicPlayerService::class.java)
         bindService(intent,mServiceConnection, Context.BIND_AUTO_CREATE)
 
+        LocalBroadcastManager.getInstance(this).registerReceiver(broadcastReceiver,intentFilter)
     }
 
     override fun onStop() {
@@ -99,6 +119,7 @@ class MainActivity : AppCompatActivity() {
           unbindService(mServiceConnection)
            mBound = false
         }
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(broadcastReceiver)
     }
     override fun onDestroy() {
         super.onDestroy()
