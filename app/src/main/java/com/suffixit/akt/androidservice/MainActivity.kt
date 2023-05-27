@@ -33,13 +33,16 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         initViews()
         btnStartService.setOnClickListener {
-            txtSongName.text = ""
+           /* txtSongName.text = ""
             stringBuilder.clear()
             for (song in songs()){
                 val intent = Intent(this,MyIntentService::class.java)
                 intent.putExtra("SONG_NAME",song)
                 startService(intent)
-            }
+            }*/
+
+            val intent = Intent(this,MyForegroundService::class.java)
+            startService(intent)
 
         }
 
