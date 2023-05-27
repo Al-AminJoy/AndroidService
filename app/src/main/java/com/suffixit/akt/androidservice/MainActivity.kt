@@ -58,6 +58,8 @@ class MainActivity : AppCompatActivity() {
                 }else{
                     btnPlay.text = "Pause"
                     musicPlayerService.play()
+                    val intent = Intent(this,MusicPlayerService::class.java)
+                    startService(intent)
                 }
             }
         }

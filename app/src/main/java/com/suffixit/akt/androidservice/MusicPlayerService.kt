@@ -21,6 +21,7 @@ class MusicPlayerService: Service() {
             val intent = Intent(MUSIC_COMPLETE_SERVICE)
             intent.putExtra("DONE","done")
             LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+            stopSelf()
         }
     }
 
@@ -32,7 +33,7 @@ class MusicPlayerService: Service() {
     }
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        return super.onStartCommand(intent, flags, startId)
+        return START_NOT_STICKY
     }
 
 
@@ -41,7 +42,7 @@ class MusicPlayerService: Service() {
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
-        return super.onUnbind(intent)
+        return true
     }
 
     override fun onDestroy() {
