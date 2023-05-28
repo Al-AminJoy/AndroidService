@@ -22,4 +22,23 @@
         android:gravity="center"
         android:padding="8dp"/>
 
+    <Button
+        android:id="@+id/btnPlay"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="Play" />
+    <Button
+        android:id="@+id/btnStartJob"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="Start Job" />
+    <Button
+        android:id="@+id/btnEndJob"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAllCaps="false"
+        android:text="End Job" />
+
 </LinearLayout>
